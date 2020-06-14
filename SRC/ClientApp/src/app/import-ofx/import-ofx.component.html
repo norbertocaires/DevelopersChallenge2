@@ -1,0 +1,39 @@
+<h1>
+  <i></i> IMPORT OFX
+</h1>
+
+<br />
+
+<div class="row">
+  <div class="col-md-2">
+    <label class="btn btn-custom btn-block" for='select-file'>
+      CHOOSE FILE
+    </label>
+    <div  style="text-align: center">
+      <input class="btn btn-custom btn-block" type="file"
+             #uploadInput
+             accept=".ofx"
+             id="select-file"
+             (change)="handleFileInput($event.target.files)">
+    </div>
+  </div>
+  <div class="col-md-2">
+    <button [disabled]="!file" class="btn-success" (click)="uploadFile()"> IMPORT</button>
+  </div>
+  <div class="col-md-2" style="text-align: center">
+    <button [disabled]="!file" class="btn btn-danger" (click)="clear()"> CLEAR</button>
+  </div>
+</div>
+
+
+<div *ngIf="totalError > 0">
+  <button class="btn btn-hot btn-block" (click)="downloadErros()" id="download">
+    Baixar {{totalError}} Erros
+  </button>
+</div>
+
+<div class="row no-margin">
+  <div *ngIf="file" class="text-center">
+    <label>Arquivo selecionado:</label> <label>{{file.name}}</label>
+  </div>
+</div>
