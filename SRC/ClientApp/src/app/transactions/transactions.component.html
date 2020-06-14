@@ -1,35 +1,39 @@
 <h1>
   TRANSACTIONS
 </h1>
+<h6 *ngIf="transactions.length > 0">
+  Total: {{totalTransaction}}
+</h6>
 
-<table class="table table-responsive">
+
+<h4 *ngIf="transactions.length === 0">
+  TRANSACTIONS EMPTY
+</h4>
+
+<table *ngIf="transactions.length > 0" class="table table-responsive">
   <thead>
     <tr>
       <th width="40%">Memo</th>
-      <th width="20%">Data</th>
-      <th width="10%">Type</th>
-      <th width="10%">Value</th>
+      <th width="30%">Date</th>
+      <th width="15%">Type</th>
+      <th width="15%">Value</th>
       <th></th>
     </tr>
   </thead>
   <tbody>
     <tr [ngClass]="{'table-heading': true, 'inactive': false}" *ngFor="let  transaction of transactions | paginate: { itemsPerPage: perPage, currentPage: currentPage, totalItems: totalTransaction }">
       <td>{{transaction.memo}}</td>
-      <td>{{transaction.data}}</td>
+      <td>{{transaction.date}}</td>
       <td>{{transaction.type}}</td>
       <td>{{transaction.value}}</td>
-      <td>
-        <button *ngIf="true" (click)=downloadFile() type="button" class="btn btn-danger" title="ERRORS"> ERROS</button>
-        <button *ngIf="true" (click)=downloadFile() type="button" class="btn btn-success" title="DUPLICATES"> DUPLICATES</button>
-      </td>
     </tr>
   </tbody>
 </table>
-<div style="text-align: center">
+<div *ngIf="transactions.length > 0" style="text-align: center">
   <pagination-controls (pageChange)="listTransactionsPaged($event)"
-                        autoHide="true"
-                        previousLabel="Anterior"
-                        nextLabel="Next">
+                       autoHide="true"
+                       previousLabel="Anterior"
+                       nextLabel="Next">
   </pagination-controls>
 </div>
 

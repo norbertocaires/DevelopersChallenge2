@@ -1,0 +1,40 @@
+<h1>
+  IMPORTS
+</h1>
+
+<h4 *ngIf="imports.length === 0">
+  IMPORTS EMPTY
+</h4>
+
+<table *ngIf="imports.length > 0" class="table table-responsive">
+  <thead>
+    <tr>
+      <th width="12%">Date</th>
+      <th width="15%">Total Transactions</th>
+      <th width="25%">Total Transactions Duplicates</th>
+      <th width="20%">Total Transactions Saves</th>
+      <th>Downloads</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr [ngClass]="{'table-heading': true, 'inactive': false}" *ngFor="let import of imports | paginate: { itemsPerPage: perPage, currentPage: currentPage, totalItems: totalImports }">
+      <td>{{import.date}}</td>
+      <td>{{import.totalTransactions}}</td>
+      <td>{{import.totalTransactionsDuplicates}}</td>
+      <td>{{import.totalTransactionsSaves}}</td>
+      <td>
+        <button *ngIf="import.totalTransactionsDuplicates > 0" (click)="downloadFileDuplicate(import.fileDuplicate)" type="button" class="btn btn-danger" title="DUPLICATES"> DUPLICATES</button>
+        <button (click)="downloadFile(import.fileImported)" type="button" class="btn btn-success" title="FILE"> FILE (OFX)</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<div *ngIf="imports.length > 0" style="text-align: center">
+  <pagination-controls (pageChange)="listImportsPaged($event)"
+                        autoHide="true"
+                        previousLabel="Anterior"
+                        nextLabel="Next">
+  </pagination-controls>
+</div>
+
+

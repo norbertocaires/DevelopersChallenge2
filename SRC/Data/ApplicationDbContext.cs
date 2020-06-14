@@ -3,7 +3,8 @@ using Nibo.Models;
 
 namespace Nibo.Data {
     public class ApplicationDbContext : DbContext {
-        public virtual DbSet<Transaction> Company { get; set; }
+        public virtual DbSet<Transaction> Transaction { get; set; }
+        public virtual DbSet<Import> Import { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
@@ -13,13 +14,11 @@ namespace Nibo.Data {
             base.OnModelCreating(builder);
 
             configTransactionEntity(builder);
+
+            configImportEntity(builder);
         }
 
         #region Config Entity Methods
-
-
-
-
         public void configTransactionEntity(ModelBuilder builder) {
             builder.Entity<Transaction>(
                 (entity) => {
@@ -27,27 +26,44 @@ namespace Nibo.Data {
 
                     entity.Property(e => e.Type)
                                  .IsRequired()
-                                 .HasMaxLength(5);
+                                 .HasMaxLength(6);
 
                     entity.Property(e => e.Memo)
-                                 .IsRequired()
-                                 .HasMaxLength(100);
+                                 .IsRequired();
 
                     entity.Property(e => e.Value)
-                                 .IsRequired()
-                                 .HasMaxLength(200);
+                                 .IsRequired();
 
-                    entity.Property(e => e.Data)
-                                 .IsRequired()
-                                 .HasMaxLength(200);
+                    entity.Property(e => e.Date)
+                                 .IsRequired();
 
-                    entity.Property(e => e.Data)
-                                 .IsRequired()
-                                 .HasMaxLength(200);
+                });
+        }
 
-                    entity.Property(e => e.Data)
+        public void configImportEntity(ModelBuilder builder) {
+            builder.Entity<Import>(
+                (entity) => {
+                    entity.HasKey(e => e.Id);
+
+                    entity.Property(e => e.Date)
                                  .IsRequired()
-                                 .HasMaxLength(200);
+                                 .HasMaxLength(6);
+
+                    entity.Property(e => e.FileDuplicate)
+                                 .IsRequired();
+
+                    entity.Property(e => e.FileImported)
+                                 .IsRequired();
+
+                    entity.Property(e => e.TotalTransactions)
+                                 .IsRequired();
+
+                    entity.Property(e => e.TotalTransactionsDuplicates)
+                                .IsRequired();
+
+                    entity.Property(e => e.TotalTransactionsSaves)
+                                .IsRequired();
+
                 });
         }
 

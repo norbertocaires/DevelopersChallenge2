@@ -4,12 +4,12 @@
 
 <br />
 
-<div class="row">
-  <div class="col-md-2">
-    <label class="btn btn-custom btn-block" for='select-file'>
-      CHOOSE FILE
+<div *ngIf="!file" class="row">
+  <div class="col-md-4">
+    <label style="text-align: center; background-color: green" class="btn btn-custom btn-block" for='select-file'>
+      CHOOSE FILE TO IMPORT
     </label>
-    <div  style="text-align: center">
+    <div style="text-align: center">
       <input class="btn btn-custom btn-block" type="file"
              #uploadInput
              accept=".ofx"
@@ -17,23 +17,46 @@
              (change)="handleFileInput($event.target.files)">
     </div>
   </div>
+</div>
+
+<div style="text-align: center" class="row no-margin">
+  <h5 *ngIf="file" class="text-center">
+    File selected: {{file.name}}
+  </h5>
+</div>
+
+<div class="row" style="text-align: center">
   <div class="col-md-2">
-    <button [disabled]="!file" class="btn-success" (click)="uploadFile()"> IMPORT</button>
+    <button *ngIf="file" class="btn-success" (click)="uploadFile()"> IMPORT</button>
   </div>
-  <div class="col-md-2" style="text-align: center">
-    <button [disabled]="!file" class="btn btn-danger" (click)="clear()"> CLEAR</button>
+  <div class="col-md-2">
+    <button *ngIf="file" class="btn btn-danger" (click)="clear()"> CLEAR</button>
   </div>
 </div>
 
 
-<div *ngIf="totalError > 0">
-  <button class="btn btn-hot btn-block" (click)="downloadErros()" id="download">
-    Baixar {{totalError}} Erros
-  </button>
-</div>
+<table *ngIf="import" class="table table-responsive">
+  <thead>
+    <tr>
+      <th width="12%">Date</th>
+      <th width="15%">Total Transactions</th>
+      <th width="25%">Total Transactions Duplicates</th>
+      <th width="20%">Total Transactions Saves</th>
+      <th>Downloads</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr [ngClass]="{'table-heading': true, 'inactive': false}">
+      <td>{{import.date}}</td>
+      <td>{{import.totalTransactions}}</td>
+      <td>{{import.totalTransactionsDuplicates}}</td>
+      <td>{{import.totalTransactionsSaves}}</td>
+      <td>
+        <button *ngIf="import.totalTransactionsDuplicates > 0" (click)="downloadFileDuplicate(import.fileDuplicate)" type="button" class="btn btn-danger" title="DUPLICATES"> DUPLICATES</button>
+        <button (click)="downloadFile(import.fileImported)" type="button" class="btn btn-success" title="FILE"> FILE (OFX)</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
-<div class="row no-margin">
-  <div *ngIf="file" class="text-center">
-    <label>Arquivo selecionado:</label> <label>{{file.name}}</label>
-  </div>
-</div>
+

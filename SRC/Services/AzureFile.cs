@@ -14,51 +14,33 @@ namespace Nibo.Services.Blob {
     public class AzureFile {
 
         private readonly CloudStorageAccount AzureStorageAccount = CloudStorageAccount.Parse(Startup.AzureStorage);
-        private readonly string File = "master.csv";
-        private readonly string Container = "master";
 
         /// <summary>
         /// Save file all transactions
         /// </summary>
         /// <param name="list"></param>
         /// <returns></returns>
-        public string SaveMasterOFXFile(List<TransactionViewModel> list) {
+        public string SaveCSV(List<TransactionViewModel> list) {
             try {
-                var fileblob = GetFileBlob(Container, File);
-                using (StreamWriter writer = new StreamWriter(fileblob.OpenWrite(), Encoding.Default)) {
-                    using (var csv = new CsvWriter(writer, System.Globalization.CultureInfo.CurrentCulture)) {
-                        csv.Configuration.RegisterClassMap<TransactionDefinitionMap>();
-                        csv.Configuration.Delimiter = ";";
-                        csv.WriteHeader<TransactionViewModel>();
-                        csv.NextRecord();
-                        csv.WriteRecords(list);
+                var fileName = DateTime.Now.ToString("dd-MM-yyyy - hh-mm-ss") + ".csv";
+                using (MemoryStream ms = new MemoryStream()) {
+                    using (StreamWriter writer = new StreamWriter(ms)) {
+                        using (var csv = new CsvWriter(writer, System.Globalization.CultureInfo.CurrentCulture)) {
+                            csv.Configuration.RegisterClassMap<TransactionDefinitionMap>();
+                            csv.Configuration.Delimiter = ";";
+                            csv.WriteHeader<TransactionViewModel>();
+                            csv.NextRecord();
+                            csv.WriteRecords(list);
+                        }
                     }
+                    UploadFileAzure("duplicates", fileName, ms.ToArray());
                 }
-                return File;
+                return fileName;
             } catch (Exception ex) {
                 throw ex;
             }
         }
 
-        public List<TransactionViewModel> GetMasterOFXFile() {
-            try {
-                var toReturn = new List<TransactionViewModel>();
-                var fileblob = GetFileBlob(Container, File);
-                if (!fileblob.Exists())
-                    return toReturn;
-                using (StreamReader read = new StreamReader(fileblob.OpenRead(), Encoding.Default)) {
-                    using (var csv = new CsvReader(read, System.Globalization.CultureInfo.CurrentCulture)) {
-                        csv.Configuration.RegisterClassMap<TransactionDefinitionMap>();
-                        csv.Configuration.Delimiter = ";";
-                        csv.Configuration.Encoding = Encoding.Default;
-                        toReturn = csv.GetRecords<TransactionViewModel>().ToList();
-                    }
-                }
-                return toReturn;
-            } catch (Exception ex) {
-                throw ex;
-            }
-        }
 
         /// <summary>
         /// Save file on container with extensions defined
@@ -66,7 +48,7 @@ namespace Nibo.Services.Blob {
         /// <param name="file"></param>
         /// <param name="containerName"></param>
         /// <param name="extensions"></param>
-        /// <returns>Url file blob</returns>
+        /// <returns>file name</returns>
         public string SaveFile(IFormFile file, string containerName, List<string> extensions) {
             string toReturn = "";
             if (file != null && file.Length > 0) {
@@ -74,15 +56,21 @@ namespace Nibo.Services.Blob {
                 if (extensions.Any(e => e.Equals(extension, StringComparison.CurrentCultureIgnoreCase))) {
                     using (var ms = new MemoryStream()) {
                         file.CopyTo(ms);
-                        toReturn = UploadFileAzure(containerName, DateTime.Now.ToString("dd-MM-yyyy - hh-mm-ss") + extension, ms.ToArray());
+                        toReturn = DateTime.Now.ToString("dd-MM-yyyy - hh-mm-ss") + extension;
+                        UploadFileAzure(containerName, toReturn, ms.ToArray());
                     }
                 }
             }
             return toReturn;
         }
 
-
-        public string GetFileError(string file, string blobName) {
+        /// <summary>
+        /// Get file on container
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="blobName"></param>
+        /// <returns>file name</returns>
+        public string GetFile(string file, string blobName) {
             try {
                 var blobfile = GetFileBlob(blobName, file);
                 return blobfile.DownloadTextAsync().Result;
@@ -91,7 +79,13 @@ namespace Nibo.Services.Blob {
             }
         }
 
-
+        /// <summary>
+        /// Save file on container
+        /// </summary>
+        /// <param name="containerName"></param>
+        /// <param name="fileName"></param>
+        /// <param name="data"></param>
+        /// <returns>Uri file</returns>
         public string UploadFileAzure(string containerName, string fileName, byte[] data) {
             var blobClient = AzureStorageAccount.CreateCloudBlobClient();
             var container = blobClient.GetContainerReference(containerName);
@@ -109,23 +103,18 @@ namespace Nibo.Services.Blob {
             return relatorioBlob.Uri.AbsoluteUri;
         }
 
+        /// <summary>
+        /// Get file from blob
+        /// </summary>
+        /// <param name="containerName"></param>
+        /// <param name="file"></param>
+        /// <returns>file</returns>
         public CloudBlockBlob GetFileBlob(string containerName, string file) {
             var blobClient = AzureStorageAccount.CreateCloudBlobClient();
             var container = blobClient.GetContainerReference(containerName);
             container.CreateIfNotExistsAsync().GetAwaiter().GetResult();
             var fileblob = container.GetBlockBlobReference(file);
             return fileblob;
-        }
-
-        public bool RemoveBLob(string filename, string containerName) {
-            var blobClient = AzureStorageAccount.CreateCloudBlobClient();
-            var container = blobClient.GetContainerReference(containerName);
-            var blobReference = container.GetBlockBlobReference(filename);
-            if (blobReference.ExistsAsync().GetAwaiter().GetResult()) {
-                blobReference.DeleteAsync().GetAwaiter().GetResult();
-                return true;
-            }
-            return false;
         }
     }
 }

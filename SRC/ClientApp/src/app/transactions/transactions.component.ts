@@ -27,7 +27,7 @@ export class TransactionsComponent {
   }
 
   getTotalTransactions(): void {
-    this.blockUI.start("Enviando requisição.");
+    this.blockUI.start("Send Request");
     this.OFXService.getTotalTransactions().subscribe(
       result => {
         this.totalTransaction = result;
@@ -43,7 +43,7 @@ export class TransactionsComponent {
 
   listTransactionsPaged(currentPage: number): void {
     this.currentPage = currentPage;
-    this.blockUI.start("Enviando requisição.");
+    this.blockUI.start("Send Request");
     this.OFXService.listTransactionsPaged(this.currentPage, this.perPage).subscribe(
       result => {
         this.transactions = result;
@@ -52,24 +52,6 @@ export class TransactionsComponent {
       error => {
         this.blockUI.stop();
       },
-    );
-  }
-
-  downloadFile(file: string): void {
-    this.OFXService.downloadFileError(file).subscribe(
-      result => {
-        var blob = new Blob([result], { type: 'text/csv' });
-        var url = window.URL.createObjectURL(blob);
-        var link = document.createElement("a");
-        link.setAttribute("href", url);
-        link.setAttribute("download", file);
-        link.click();
-      },
-      error => {
-        //this.notification.error("Erro no download.");
-      },
-      () => {
-      }
     );
   }
 }

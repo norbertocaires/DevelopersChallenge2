@@ -6,6 +6,8 @@ import * as signalR from '@aspnet/signalr';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 
 import { OFXService } from '../../services/ofx.service';
+import { ImportsService } from '../../services/import.service';
+import { ImportViewModel } from '../../models/import/ImportViewModel';
 
 @Component({
   selector: 'app-import-ofx',
@@ -16,18 +18,16 @@ export class ImportOfxComponent {
   @ViewChild('uploadInput') uploadInput: ElementRef;
   private _hubConnection: HubConnection | undefined;
 
+
   @BlockUI() blockUI: NgBlockUI;
 
-
-
   public file: File | null;
-
-  public fileError: string = "";
-  public totalError: number = 0;
-  public totalSuccess: number = 0;
+  public error: boolean = false;
+  public import: ImportViewModel = null;
 
   constructor(
     private OFXService: OFXService,
+    private ImportsService: ImportsService,
   ) {
     this._hubConnection = new signalR.HubConnectionBuilder()
       .withUrl('/notify')
@@ -40,73 +40,76 @@ export class ImportOfxComponent {
       .catch(err => console.log('error while establishing connection :('));
 
     this._hubConnection.on('updatepercent', (msg: string) => {
-      console.log(msg);
       this.blockUI.update(msg)
     });
 
-    this._hubConnection.on('Sucess', (msg: string) => {
-      //this.notification.success(msg);
-      //this.modal.hide();
-      console.log(msg);
+    this._hubConnection.on('Sucess', (response: ImportViewModel) => {
+      this.import = response;
+      console.log(response);
       this.blockUI.stop();
     });
 
     this._hubConnection.on('Error', (msg: string) => {
-      //this.notification.error(msg);
-      //this.modal.hide();
-      console.log(msg);
+      this.error = true;
       this.blockUI.stop();
     });
   }
 
   clear() {
     this.file = null;
+    this.import = null;
   }
 
 
   uploadFile(): void {
-    this.blockUI.start("Enviando requisição.");
+    this.blockUI.start("Send Request.");
     this.OFXService.uploadFile(this.file).subscribe(
       result => {
-        //this.totalSuccess = result.success;
-        //this.totalError = result.error;
-        //this.fileError = result.file;
       },
       error => {
+        this.error = true;
         this.blockUI.stop();
-        //            this.notification.error(error.error.message.slice(0, -1));
       },
-      () => {
-        if (this.totalError != 0) {
-          //this.notification.error('Error upload file, ' + this.totalError + (this.totalError > 1 ? ' erros found.' : ' erro found.'));
-          this.blockUI.stop();
-        }
-      }
-    );
-  }
-
-
-
-  downloadFile(): void {
-    this.OFXService.downloadFileError(this.fileError).subscribe(
-      result => {
-        var blob = new Blob([result], { type: 'text/csv' });
-        var url = window.URL.createObjectURL(blob);
-        var link = document.createElement("a");
-        link.setAttribute("href", url);
-        link.setAttribute("download", this.fileError);
-        link.click();
-      },
-      error => {
-        //this.notification.error("Erro no download.");
-      },
-      () => {
-      }
     );
   }
 
   handleFileInput(files: FileList): void {
     this.file = files.item(0);
+  }
+
+  downloadFile(file: string, type: string): void {
+    this.ImportsService.downloadFile(file).subscribe(
+      result => {
+        var blob = new Blob([result], { type: 'text/ofx' });
+        var url = window.URL.createObjectURL(blob);
+        var link = document.createElement("a");
+        link.setAttribute("href", url);
+        link.setAttribute("download", file);
+        link.click();
+      },
+      error => {
+      },
+      () => {
+      }
+    );
+  }
+
+
+  downloadFileDuplicate(file: string): void {
+    this.ImportsService.downloadFileDuplicates(file).subscribe(
+      result => {
+        var blob = new Blob([result], { type: 'text/csv' });
+        var url = window.URL.createObjectURL(blob);
+        var link = document.createElement("a");
+        link.setAttribute("href", url);
+        link.setAttribute("download", file);
+        link.click();
+      },
+      error => {
+      },
+      () => {
+      }
+    );
   }
 
 }
