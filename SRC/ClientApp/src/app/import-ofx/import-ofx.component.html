@@ -7,7 +7,7 @@
 <div *ngIf="!file" class="row">
   <div class="col-md-4">
     <label style="text-align: center; background-color: green" class="btn btn-custom btn-block" for='select-file'>
-      CHOOSE FILE TO IMPORT
+      CHOOSE FILE TO IMPORT (CLICK ME)
     </label>
     <div style="text-align: center">
       <input class="btn btn-custom btn-block" type="file"
@@ -27,10 +27,10 @@
 
 <div class="row" style="text-align: center">
   <div class="col-md-2">
-    <button *ngIf="file" class="btn-success" (click)="uploadFile()"> IMPORT</button>
+    <button *ngIf="file" class="btn-success" (click)="uploadFile()"> START IMPORT</button>
   </div>
   <div class="col-md-2">
-    <button *ngIf="file" class="btn btn-danger" (click)="clear()"> CLEAR</button>
+    <button *ngIf="file" class="btn btn-danger" (click)="clear()"> CLEAN SCREEN</button>
   </div>
 </div>
 
