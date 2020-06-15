@@ -5,15 +5,17 @@
 
 -------
 
-Nome completo: Norberto Luz Caires Junior
+Nome completo: **Norberto Luz Caires Junior**
  - Forjado na Bahia
  - Crescido na Chapada Diamantina, BA S2
  - Atualmente, sofrendo com a seca de Brasília
  - O Atila não deixou a gente sair de casa hoje :(
 
-Data de nascimento: 01/10/1991
+Data de nascimento: **01/10/1991**
  - 6 da manhã (perdoa mamãe)
 
-LinkedIn: https://github.com/norbertocaires
+LinkedIn: **https://github.com/norbertocaires**
+ - Dei o meu melhor nos projetos que têm aê ;D
 
-Como nos conheceu: Indicação de uma amiga ;)
+Como nos conheceu: **indicação**
+ - De uma webnamorada, em tempos de quarentena ;)
