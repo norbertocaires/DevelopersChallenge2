@@ -39,14 +39,14 @@ Lembre-se que os arquivos OFX poderão conter transações de um mesmo período.
 Os arquivos OFX estão na pasta ``\OFX``.
 
 **Requisitos**
-- [ ] É necessário persistir as transações finais.
-- [ ] Não utilize bibliotecas específicas para a leitura de arquivos do tipo OFX.
-- [ ] Você deverá desenvolver uma solução **WEB** em C# .NET utilizando os frameworks, tecnologias e conceitos que julgar melhor.
-- [ ] Queremos como resultado uma solução simples, legível e de qualidade. 
-- [ ] Código feito e comentado em **inglês**.
-- [ ] Não utilize soluções prontas. Nós as conhecemos.
-- [ ] Seja criativo. Você decide quais funcionalidades irá incluir além dos requisitos.
-- [ ] Não hospede sua aplicação ou parte dela em nenhum lugar. Sua aplicação deverá rodar localmente sem depender de serviços externos.
+- [x] É necessário persistir as transações finais.
+- [x] Não utilize bibliotecas específicas para a leitura de arquivos do tipo OFX.  :(
+- [x] Você deverá desenvolver uma solução **WEB** em C# .NET utilizando os frameworks, tecnologias e conceitos que julgar melhor.
+- [x] Queremos como resultado uma solução simples, legível e de qualidade. 
+- [x] Código feito e comentado em **inglês**.
+- [x] Não utilize soluções prontas. Nós as conhecemos.
+- [x] Seja criativo. Você decide quais funcionalidades irá incluir além dos requisitos.
+- [x] Não hospede sua aplicação ou parte dela em nenhum lugar. Sua aplicação deverá rodar localmente sem depender de serviços externos.
 
 ## Envio da solução
 Você deverá criar um fork deste repositório, incluir o seu código fonte na pasta ``SRC``,  preencher o formulário "_about/Profile.md" e enviar para recruta.tech@nibo.com.br o link do seu fork.

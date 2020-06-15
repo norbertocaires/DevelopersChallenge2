@@ -1,7 +1,19 @@
-Meu perfil
+<p align="center"><img src="https://www.nibo.com.br/logo-nibo.png" width="150" /></p>
+<h1 align="center">Nibo Full-Stack Developers Challenge - Level 2</h1>
+
+<h4>Meu perfil</h4>
+
 -------
 
-Nome completo: Norberto Luz Caires Junikor
+Nome completo: Norberto Luz Caires Junior
+ - Forjado na Bahia
+ - Crescido na Chapada Diamantina, BA S2
+ - Atualmente, sofrendo com a seca de Brasília
+ - O Atila não deixou a gente sair de casa hoje :(
+
 Data de nascimento: 01/10/1991
+ - 6 da manhã (perdoa mamãe)
+
 LinkedIn: https://github.com/norbertocaires
-Como nos conheceu: Indicação de uma maiga ;)
+
+Como nos conheceu: Indicação de uma amiga ;)
